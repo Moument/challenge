@@ -10,7 +10,6 @@ import IconMachine from '@/components/icons/IconMachine.vue'
 import IconTumble from '@/components/icons/IconTumble.vue'
 
 import IconBasket from '@/components/icons/IconBasket.vue'
-import { useShopStore, type Product } from '@/stores/shop'
 </script>
 <template>
   <div class="product-modal-close" @click="$emit('toggle-modal')">x</div>
@@ -66,6 +65,72 @@ import { useShopStore, type Product } from '@/stores/shop'
       </div>
     </div>
     <div class="product-modal-desc" v-if="product">
+      <ContentTab :tabs="product.productDetails">
+        <template #tab-0>
+          <h4>{{ product.productDetails[0].title }}</h4>
+          <ul>
+            <li v-for="(item, index) in product.productDetails[0].content" :key="index">
+              <span class="list-title">{{ item.name }}:</span> {{ item.value }}
+            </li>
+          </ul>
+        </template>
+        <template #tab-1>
+          <h4>{{ product.productDetails[1].title }}</h4>
+          <ul>
+            <li v-for="(item, index) in product.productDetails[1].content" :key="index">
+              <span class="list-title">{{ item.name }}:</span> {{ item.value }}
+            </li>
+          </ul>
+        </template>
+        <template #tab-2>
+          <div class="material">
+            <div
+              class="material-content"
+              v-for="(subcontent, index) in product.productDetails[2].content.materialWrap"
+              :key="index"
+            >
+              <h4>{{ subcontent.title }}</h4>
+              <ul>
+                <li v-for="(item, index) in subcontent.content" :key="index">
+                  <span class="list-title">{{ item.name }}</span
+                  >: {{ item.value }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="care">
+            <h4>{{ product.productDetails[2].content.care.title }}</h4>
+            <ul>
+              <li
+                v-for="(subcontent, index) in product.productDetails[2].content.care.content"
+                :key="index"
+              >
+                <component :is="getIconForName(subcontent.name)" /> {{ subcontent.value }}
+              </li>
+            </ul>
+          </div>
+        </template>
+        <template #tab-3>
+          <h4>{{ product.productDetails[3].title }}</h4>
+          <div class="text" v-if="product.productDetails[3].certified === true">
+            <p>
+              WE CARE: Items with other sustainable propertiers that go beyond our minimum standard
+              are marked with the WE CARE label.
+            </p>
+            <h4>ICON Certified sustainable fibre</h4>
+            <p>
+              When it comes to certain sustainable fibres, we're commited to using natural firbes
+              from renewable sources. The raw materials are cultivated via resource-saving methods.
+              <small>
+                This product support economically, ecologically and socially sustainable cotton
+                farming.<br />
+                The sourcing if sustainable cotton follows the principal of mass balance. You can
+                find more information <a href="#" alt="">here</a>.
+              </small>
+            </p>
+          </div>
+        </template>
+      </ContentTab>
     </div>
   </div>
   <div class="product-modal-footer">
@@ -108,10 +173,10 @@ export default defineComponent({
   },
   methods: {
     updateAvailableSizes() {
-      /*this.availableSizes = Object.values(this.product.sizes).forEach((size: any) => ({
+      this.availableSizes = this.product.sizes.map((size: string) => ({
         value: size,
         available: this.selectedColor.availableSize.includes(this.product.sizes.indexOf(size) + 1)
-      }))*/
+      }))
     },
     getAvailableSizes() {
       this.updateAvailableSizes()

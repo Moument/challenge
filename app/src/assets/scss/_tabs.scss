@@ -42,6 +42,18 @@
         border-top: 0.0625rem solid rgba(0, 0, 0, 0.1);
         margin-top: var(--grid-gap);
         padding-top: var(--grid-gap);
+        ul {
+          columns: 2;
+          li {
+            display: flex;
+            align-items: center;
+            svg {
+              width: 1.5rem;
+              height: 1.5rem;
+              margin-right: var(--grid-gap);
+            }
+          }
+        }
       }
       .text {
         p {

@@ -5,32 +5,103 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-const products = require('./products');
+const shop = require('./shop');
+const brands = require('./brands');
 
 app.use(cors());
 
 app.use('/images', express.static('images'));
 
-app.get('/product/:type/:category', (req, res) => {
+function sendJSON(res, data) {
+  res.json(data);
+}
+
+function formatShopData(data) {
+  const formattedData = {};
+  Object.values(data).filter(item => typeof item === 'object').forEach((item, index) => {
+    formattedData[index] = {
+      name: item.name,
+      url: item.url
+    };
+  });
+  return formattedData;
+}
+
+// BRANDS
+app.get('/brand/:id', (req, res) => {
+  const { id } = req.params;
+
+  if (brands[id]) {
+    sendJSON(res, brands[id]);
+  } else {
+    sendJSON(res, { error: 'Marke nicht gefunden' });
+  }
+});
+
+// SHOP
+app.get('/shop', (req, res) => {
+  if (shop) {
+    const types = formatShopData(shop);
+    sendJSON(res, { types });
+  } else {
+    sendJSON(res, { error: 'Typen nicht gefunden' });
+  }
+});
+
+app.get('/shop/:type', (req, res) => {
+  const { type } = req.params;
+
+  if (shop[type]) {
+    const categories = formatShopData(shop[type]);
+    sendJSON(res, {
+      type: shop[type].name,
+      categories: categories
+    });
+  } else {
+    sendJSON(res, { error: 'Kategorie nicht gefunden' });
+  }
+});
+
+app.get('/shop/:type/:category', (req, res) => {
   const { type, category } = req.params;
 
-  if (products[type] && products[type][category]) {
-    res.json(products[type][category]);
+  if (shop[type] && shop[type][category]) {
+    const products = {};
+    Object.values(shop[type][category]).filter(product => typeof product === 'object').forEach((product, index) => {
+      products[index] = {
+        name: product.name,
+        url: product.url,
+        brandId: product.brandId,
+        price: product.price,
+        isNew: product.isNew,
+        colors: product.colors
+      };
+    });
+    sendJSON(res, {
+      type: shop[type].name,
+      category: shop[type][category].name,
+      products: products
+    });
   } else {
-    res.status(404).json({ error: 'Kategorie nicht gefunden' });
+    sendJSON(res, { error: 'Kategorie nicht gefunden' });
   }
 });
 
-app.get('/product/:type/:category/:product', (req, res) => {
-  const { type, category, product } = req.params;
+app.get('/shop/:type/:category/:name', (req, res) => {
+  const { type, category, name } = req.params;
 
-  if (products[type] && products[type][category] && products[type][category][product]) {
-    res.json(products[type][category][product]);
+  if (shop[type] && shop[type][category] && shop[type][category][name]) {
+    sendJSON(res, {
+      type: shop[type].name,
+      category: shop[type][category].name,
+      product: shop[type][category][name]
+    });
   } else {
-    res.status(404).json({ error: 'Produkt nicht gefunden' });
+    sendJSON(res, { error: 'Produkt nicht gefunden' });
   }
 });
 
+// COUNT IMAGES FOR PRODUCTS
 app.get('/images/count/:product/:category', (req, res) => {
   const product = req.params.product;
   const category = req.params.category;
@@ -39,15 +110,14 @@ app.get('/images/count/:product/:category', (req, res) => {
   fs.readdir(directoryPath, (err, files) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ error: 'Fehler beim Lesen des Verzeichnisses' });
+      sendJSON(res, { error: 'Fehler beim Lesen des Verzeichnisses' });
     } else {
       const imageCount = files.filter(file => file.endsWith('.jpg') || file.endsWith('.jpeg') || file.endsWith('.png') || file.endsWith('.webp')).length;
-      res.json({ count: imageCount });
+      sendJSON(res, { count: imageCount });
     }
   });
 });
 
-// Server starten
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

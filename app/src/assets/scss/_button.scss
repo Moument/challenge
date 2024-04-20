@@ -3,4 +3,23 @@
   background: var(--challenge-primary);
   border: none;
   color: var(--challenge-white);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  .basket-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: 4.375rem;
+    .filled {
+      opacity: 0;
+      @extend %transition;
+    }
+  }
+  &:hover {
+    .basket-icon {
+      .filled {
+        opacity: 1;
+      }
+    }
+  }
 }
