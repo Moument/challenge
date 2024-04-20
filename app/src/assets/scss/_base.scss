@@ -1,0 +1,58 @@
+:root {
+  --challenge-white: #ffffff;
+  --challenge-black: #000000;
+  --challenge-grey: #d9d8d6;
+
+  --color-background: var(--challenge-white);
+  --challenge-primary: var(--challenge-black);
+
+  --color-border: var(--challenge-black);
+
+  --color-heading: var(--challenge-black);
+  --color-text: var(--challenge-black);
+
+  --grid-width: 87.5rem;
+
+  --grid-gap: 2.5rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.5;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+  font-size: 1rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+%transition {
+  transition: all 200ms linear 0s;
+}

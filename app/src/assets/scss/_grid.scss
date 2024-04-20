@@ -1,0 +1,10 @@
+.container {
+  max-width: calc(var(--grid-width) + (var(--grid-gap) / 2));
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}

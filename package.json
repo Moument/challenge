@@ -1,0 +1,20 @@
+{
+  "name": "Challenge",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "app",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run start:server\" \"npm run start:dev\"",
+    "build": "npm run start:server && npm run start:build",
+    "start:server": "node server/server.js",
+    "start:dev": "cd app && npm run dev",
+    "start:build": "cd app && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
