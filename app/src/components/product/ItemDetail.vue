@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import ImageSlider from '@/components/features/ImageSlider.vue'
-import ContentTab from '@/components/features/ContentTab.vue'
 
 import IconChlore from '@/components/icons/IconChlore.vue'
 import IconDryClean from '@/components/icons/IconDryClean.vue'
 import IconIron from '@/components/icons/IconIron.vue'
 import IconMachine from '@/components/icons/IconMachine.vue'
 import IconTumble from '@/components/icons/IconTumble.vue'
+import IconQr from '@/components/icons/IconQr.vue'
+import IconShirt from '@/components/icons/IconShirt.vue'
 
 import IconBasket from '@/components/icons/IconBasket.vue'
-import { useShopStore, type Product } from '@/stores/shop'
+import { useShopStore, type Color, type Product, type Size } from '@/stores/shop'
 </script>
 <template>
   <div class="product-modal-close" @click="$emit('toggle-modal')">x</div>
@@ -19,10 +20,10 @@ import { useShopStore, type Product } from '@/stores/shop'
       <ImageSlider :color="selectedColor" />
       <div class="product-modal-info">
         <span v-if="product.isNew" class="age-flag">Brand new</span>
-        <h2>{{ product.name }}</h2>
+        <h3>{{ product.name }}</h3>
         <div class="product-modal-info-wrapper price">
           <p class="price">{{ product.price }}</p>
-          <img src="#" class="brand" alt="#" />
+          <img :src="`http://localhost:3000/images/${product.brandLogoPath}.svg`" :alt="product.name + 'Brand logo'">
         </div>
         <div class="product-modal-info-wrapper">
           <p class="color">
@@ -34,8 +35,8 @@ import { useShopStore, type Product } from '@/stores/shop'
               v-for="(color, index) in product.colors"
               :key="index"
               :class="{ active: selectedColor.name === color.name }"
-              @mouseenter="changeColorName(color.name)"
-              @mouseleave="changeColorName(selectedColor.name)"
+              @mouseenter="changeColorName(color)"
+              @mouseleave="changeColorName(selectedColor)"
               @click="changeColor(color)"
             >
               <img
@@ -52,7 +53,7 @@ import { useShopStore, type Product } from '@/stores/shop'
           <div class="icon-wrapper sizes">
             <div
               class="size-pill icon"
-              v-for="(size, index) in getAvailableSizes()"
+              v-for="(size, index) in availableSizes"
               :key="index"
               @click="selectSize(size)"
               @mouseenter="changeSizeName(true, size)"
@@ -66,6 +67,108 @@ import { useShopStore, type Product } from '@/stores/shop'
       </div>
     </div>
     <div class="product-modal-desc" v-if="product">
+      <div class="tab-wrapper">
+        <div class="tab-header">
+          <div class="tab-title" v-for="(tab, index) in product.productDetails" :key="index" :data-tab="index" :class="{ active: activeTab === index }" @click="changeTab(index)">
+            {{ tab.title }}
+          </div>
+        </div>
+        <div class="tab-content-wrapper">
+          <div class="tab-content" v-for="(tab, index) in product.productDetails" :key="index" :data-tab="index" :class="{ active: activeTab === index }">
+            <template v-if="index === 0">
+              <h4>{{ tab.title }}</h4>
+              <div class="grid">
+                <div class="grid-half">
+                  <ul>
+                    <li v-for="(item, index) in tab.content" :key="index">
+                      <template v-if="item.name !== 'EAN' && item.name !== 'Article Number'">
+                        <span class="list-title">{{ item.name }}:</span> 
+                        {{ item.value }}
+                      </template>
+                    </li>
+                  </ul>
+                  <div class="icon-list" v-if="tab.content.some(item => item.name === 'EAN' || item.name === 'Article Number')">
+                    <div class="qr-icon"><IconQr /></div>
+                    <ul> 
+                      <template v-for="(item, index) in tab.content" :key="index">
+                        <li v-if="(item.name === 'EAN' || item.name === 'Article Number')">{{ item.value }}</li>
+                      </template>
+                    </ul>
+                  </div>
+                </div>
+                <div class="grid-half">
+                  <div class="overlapping-images">
+                  </div>
+                </div>
+              </div>
+            </template>
+            <template v-if="index === 1">
+              <h4>{{ tab.title }}</h4>
+              <ul >
+                <li v-for="(item, index) in tab.content" :key="index">
+                    <span class="list-title">{{ item.name }}:</span> 
+                    {{ item.value }}
+                </li>
+              </ul>
+            </template>
+            <template v-if="index === 2">
+              <div class="grid">
+                <div
+                  class="grid-half"
+                  v-for="(subcontent, index) in tab.content.materialWrap"
+                  :key="index"
+                >
+                  <h4>{{ subcontent.title }}</h4>
+                  <ul>
+                    <li v-for="(item, index) in subcontent.content" :key="index">
+                      <span class="list-title">{{ item.name }}</span
+                      >: {{ item.value }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="grid">
+                <div class="grid-full care">
+                  <h4>{{ tab.content.care.title }}</h4>
+                  <ul>
+                    <li
+                      v-for="(subcontent, index) in tab.content.care.content"
+                      :key="index"
+                    >
+                      <component :is="getIconForName(subcontent.name)" /> {{ subcontent.value }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </template>
+            <template v-if="index === 3">
+              <h4>{{ tab.title }}</h4>
+              <div class="text" v-if="tab.certified === true">
+                <p>
+                  WE CARE: Items with other sustainable propertiers that go beyond our minimum standard
+                  are marked with the WE CARE label.
+                </p>
+                <h4 class="headline-icon-wrapper">
+                  <div class="headline-icon">
+                    <IconShirt />
+                  </div>
+                   Certified sustainable fibre
+                </h4>
+                <p>
+                  When it comes to certain sustainable fibres, we're commited to using natural firbes
+                  from renewable sources. The raw materials are cultivated via resource-saving methods.
+                  <small>
+                    This product support economically, ecologically and socially sustainable cotton
+                    farming.<br />
+                    The sourcing if sustainable cotton follows the principal of mass balance. You can
+                    find more information <a href="#" alt="">here</a>.
+                  </small>
+                </p>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="product-modal-footer">
@@ -74,6 +177,10 @@ import { useShopStore, type Product } from '@/stores/shop'
   </div>
 </template>
 <script lang="ts">
+interface Tab {
+  title: string
+  content: Object
+}
 export default defineComponent({
   name: 'ProductDetailView',
   emits: ['toggle-modal'],
@@ -83,11 +190,13 @@ export default defineComponent({
     IconIron,
     IconMachine,
     IconTumble,
-    IconBasket
+    IconBasket,
+    IconShirt,
+    IconQr
   },
   props: {
-    product: {
-      type: Object,
+    productName: {
+      type: String,
       required: true
     },
     color: {
@@ -97,34 +206,51 @@ export default defineComponent({
   },
   data() {
     return {
-      selectedColor: { ...this.color },
-      selectedColorName: this.color.name,
-      selectedSize: {
-        value: 'Noch keine größe ausgewählt'
-      },
-      selectedSizeName: 'Noch keine größe ausgewählt',
-      availableSizes: []
+      type: this.$router.currentRoute.value.params.type as string,
+      category: this.$router.currentRoute.value.params.category as string,
+      product: ref({} as Product),
+      selectedColor: ref(this.color as Color),
+      selectedColorName: ref(this.color.name as string),
+      selectedSize: ref({value: 'Noch keine größe ausgewählt'} as Size),
+      selectedSizeName: ref('Noch keine größe ausgewählt' as string),
+      availableSizes: ref([] as Size[]),
+      activeTab: ref(0 as number)
     }
   },
+  mounted() {
+    this.getProduct()
+  },
   methods: {
+    async getProduct() {
+      try {
+        const shopStore = useShopStore()
+        await shopStore.fetchProduct(this.type, this.category, this.productName)
+        this.product = shopStore.product
+        console.log(this.product)
+        this.getAvailableSizes()
+      } catch (error) {
+        console.error('Fehler beim Laden der Typen:', error)
+      }
+    },
     updateAvailableSizes() {
-      /*this.availableSizes = Object.values(this.product.sizes).forEach((size: any) => ({
+      const sizes = this.product.sizes
+      const sizesInColor = this.selectedColor.availableSize
+      this.availableSizes = sizes.map((size: string) => ({
         value: size,
-        available: this.selectedColor.availableSize.includes(this.product.sizes.indexOf(size) + 1)
-      }))*/
+        available: sizesInColor.includes(sizes.indexOf(size) + 1)
+      }))
     },
     getAvailableSizes() {
       this.updateAvailableSizes()
-      return this.availableSizes
     },
-    changeColor(color: Object) {
+    changeColor(color: Color) {
       this.selectedColor = color
       this.updateAvailableSizes()
     },
-    changeColorName(color: Object) {
-      this.selectedColorName = color
+    changeColorName(color: Color) {
+      this.selectedColorName = color.name
     },
-    changeSizeName(status: boolean, size: any) {
+    changeSizeName(status: boolean, size: Size) {
       if (status) {
         this.selectedSizeName = size.value
       } else {
@@ -134,8 +260,11 @@ export default defineComponent({
     selectSize(size: any) {
       this.selectedSize = size
     },
+    changeTab(index: number) {
+      this.activeTab = index
+    },
     getIconForName(name: string) {
-      const iconMap: Record<string, any> = {
+      const iconMap: Record<string, Object> = {
         washing: IconMachine,
         bleach: IconChlore,
         ironing: IconIron,

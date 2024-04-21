@@ -11,8 +11,11 @@ import { useShopStore, type Types } from '@/stores/shop'
         <RouterLink
           v-for="(type, index) in types"
           :key="index"
+          class="shop-item"
           :to="{ name: 'type', params: { type: type.url } }"
-          >{{ type.name }}</RouterLink
+          >
+          {{ type.name }}
+        </RouterLink
         >
       </div>
     </div>
@@ -24,7 +27,7 @@ export default defineComponent({
   name: 'HomeView',
   data() {
     return {
-      types: ref({} as Types[])
+      types: ref({} as Types)
     }
   },
   mounted() {

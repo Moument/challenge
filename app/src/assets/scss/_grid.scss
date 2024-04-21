@@ -4,7 +4,15 @@
 }
 
 .grid {
+  margin-top: var(--grid-gap);
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--grid-gap);
+}
+
+.grid-half {
+  grid-column: span 6;
+}
+.grid-full {
+  grid-column: span 12;
 }

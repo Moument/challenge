@@ -11,6 +11,7 @@ import { useShopStore, type Categories } from '@/stores/shop'
         <RouterLink
           v-for="(category, index) in categories"
           :key="index"
+          class="shop-item"
           :to="{ name: 'category', params: { type: type, category: category.url } }"
           >{{ category.name }}</RouterLink
         >
@@ -25,7 +26,7 @@ export default defineComponent({
   data() {
     return {
       type: this.$router.currentRoute.value.params.type as string,
-      categories: ref({} as Categories[])
+      categories: ref({} as Categories)
     }
   },
   mounted() {

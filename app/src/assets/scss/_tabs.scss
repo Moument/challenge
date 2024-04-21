@@ -5,9 +5,11 @@
     align-items: center;
     margin: 0 calc((var(--grid-gap) / 4) * -1);
     .tab-title {
+      padding-top: 0;
       padding: calc(var(--grid-gap) / 4);
       position: relative;
       text-transform: uppercase;
+      font-weight: 700;
       cursor: pointer;
       &.active {
         &:after {
@@ -30,12 +32,46 @@
       &.active {
         display: block;
       }
-      .material {
+      .grid {
+        margin-top: 0;
+      }
+      .headline-icon-wrapper {
         display: flex;
-        align-items: flex-start;
-        .material-content {
-          width: 50%;
-          flex: 0 0 50%;
+        align-items: center;
+        .headline-icon {
+          width: 3rem;
+          height: 3rem;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 1rem;
+          background: var(--challenge-black);
+        }
+        svg {
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+      .icon-list {
+        display: flex;
+        align-items: center;
+        margin-top: 1rem;
+        .qr-icon {
+          width: 2rem;
+          height: 2rem;
+          border-radius: 50%;
+          background: var(--challenge-white);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          svg {
+            width: 1rem;
+            height: 1rem;
+          }
+        }
+        ul {
+          margin: 0 0 0 1rem;
         }
       }
       .care {
@@ -71,9 +107,7 @@
         list-style: none;
         li {
           .list-title {
-            font: {
-              weight: 700;
-            }
+            margin-bottom: 0.3125rem;
           }
         }
       }

@@ -13,6 +13,8 @@
 
   --grid-width: 87.5rem;
 
+  --font: 'Noto Sans', sans-serif;
+
   --grid-gap: 2.5rem;
 }
 
@@ -24,28 +26,17 @@
   font-weight: normal;
 }
 
+%transition {
+  transition: all 200ms linear 0s;
+}
+
 body {
   min-height: 100vh;
   color: var(--color-text);
   background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
   line-height: 1.5;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
-  font-size: 1rem;
+  font-family: var(--font);
+  font-size: 0.75rem;
 }
 
 img {
@@ -53,6 +44,29 @@ img {
   height: auto;
 }
 
-%transition {
-  transition: all 200ms linear 0s;
+a {
+  text-decoration: none;
+  color: var(--color-text);
+  @extend %transition;
+  &:hover {
+    color: var(--challenge-primary)
+  }
+}
+
+h1, .h1, h2, .h2 {
+  font: {
+    size: 1.875rem;
+    weight: 700;
+  }
+}
+h3 {
+  font: {
+    size: 1rem;
+    weight: 400;
+  }
+}
+h4 {
+  font: {
+    weight: 700;
+  }
 }

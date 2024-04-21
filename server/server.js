@@ -6,7 +6,6 @@ const app = express();
 const PORT = 3000;
 
 const shop = require('./shop');
-const brands = require('./brands');
 
 app.use(cors());
 
@@ -26,17 +25,6 @@ function formatShopData(data) {
   });
   return formattedData;
 }
-
-// BRANDS
-app.get('/brand/:id', (req, res) => {
-  const { id } = req.params;
-
-  if (brands[id]) {
-    sendJSON(res, brands[id]);
-  } else {
-    sendJSON(res, { error: 'Marke nicht gefunden' });
-  }
-});
 
 // SHOP
 app.get('/shop', (req, res) => {
@@ -69,9 +57,11 @@ app.get('/shop/:type/:category', (req, res) => {
     const products = {};
     Object.values(shop[type][category]).filter(product => typeof product === 'object').forEach((product, index) => {
       products[index] = {
+        id: product.id,
+        sizes: product.sizes,
         name: product.name,
         url: product.url,
-        brandId: product.brandId,
+        brandLogoPath: product.brandLogoPath,
         price: product.price,
         isNew: product.isNew,
         colors: product.colors
@@ -92,8 +82,8 @@ app.get('/shop/:type/:category/:name', (req, res) => {
 
   if (shop[type] && shop[type][category] && shop[type][category][name]) {
     sendJSON(res, {
-      type: shop[type].name,
-      category: shop[type][category].name,
+      type: type,
+      category: category,
       product: shop[type][category][name]
     });
   } else {

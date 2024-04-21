@@ -1,21 +1,22 @@
 <script setup lang="ts">
 import { defineComponent, ref } from 'vue'
-import { useShopStore, type Product, type Products } from '@/stores/shop'
-import ProductFilter from '@/components/product/ProductFilter.vue'
+import { useShopStore, type Color, type Product, type Products } from '@/stores/shop'
 import ItemDetail from '@/components/product/ItemDetail.vue';
 </script>
 
 <template>
   <div id="content">
     <div class="container">
-      <ProductFilter />
-    </div>
-    <div class="container">
       <div class="grid">
         <template v-for="(product, productIndex) in products" :key="productIndex">
           <div class="product-list-item-wrapper">
-            <div class="product-list-item" @click="openModal(product, product.colors[selectedColorIndex[productIndex]])">
+            <div class="product-list-item" @click="openModal(product.url, product.colors[selectedColorIndex[productIndex]])">
               <div class="color-image-wrapper">
+                <div class="badges" v-if="product.isNew">
+                  <div class="new-badge" v-if="product.isNew">
+                    BRAND NEW
+                  </div>
+                </div>
                 <img
                   :src="`http://localhost:3000/images/${product.colors[selectedColorIndex[productIndex]].path}/${product.colors[selectedColorIndex[productIndex]].colorPathName}1.webp`"
                   :alt="product.name"
@@ -24,23 +25,25 @@ import ItemDetail from '@/components/product/ItemDetail.vue';
               </div>
               <div class="product-list-item">
                 <div class="product-list-item-content">
-                  <span class="brand">{{ product.brandId }}</span>
+                  <span class="brand"><img :src="`http://localhost:3000/images/${product.brandLogoPath}.svg`" :alt="product.name + 'Brand logo'"></span>
                   <h3>{{ product.name }}</h3>
                   <p class="price">{{ product.price }}</p>
                 </div>
               </div>
             </div>
             <div class="colors">
-              <span class="color-circle" v-for="(color, colorIndex) in product.colors" :key="colorIndex" @click="changeColor(productIndex, colorIndex)">
-                <span class="color-circle-inner" :style="`background-color: ${color.colorHex};`"></span>
-              </span>
+              <template v-for="(color, colorIndex) in product.colors" :key="colorIndex">
+                <span class="color-circle" @click="changeColor(productIndex, colorIndex)" :class="{ active: selectedColorIndex[productIndex] === colorIndex}">
+                  <span class="color-circle-inner" :style="`background-color: ${color.colorHex};`"></span>
+                </span>
+              </template>
             </div>
           </div>
         </template>
       </div>
       <div class="product-modal-wrapper" v-if="showModal">
         <div class="product-modal container">
-          <ItemDetail :product="selectedProduct" :color="selectedProductColor" @toggle-modal="closeModal()" />
+          <ItemDetail :productName="selectedProduct" :color="selectedProductColor" @toggle-modal="closeModal()" />
         </div>
         <div class="product-modal-background" @click="closeModal()"></div>
       </div>
@@ -51,19 +54,17 @@ import ItemDetail from '@/components/product/ItemDetail.vue';
 export default defineComponent({
   name: 'ProductListView',
   components: {
-    ItemDetail,
-    ProductFilter
+    ItemDetail
   },
   data() {
     return {
       type: this.$router.currentRoute.value.params.type as string,
       category: this.$router.currentRoute.value.params.category as string,
-      products: ref([] as Products[]),
-      colors: ref([] as Array<Object>),
-      selectedColorIndex: ref([] as Number[]),
+      products: ref({} as Products),
+      selectedColorIndex: ref([] as Array<number>),
       showModal: ref(false as boolean),
-      selectedProduct: ref({} as Product[]),
-      selectedProductColor: ref({} as Object[])
+      selectedProduct: ref('' as string),
+      selectedProductColor: ref({} as Color)
     }
   },
   mounted() {
@@ -75,9 +76,8 @@ export default defineComponent({
         const shopStore = useShopStore()
         await shopStore.fetchProducts(this.type, this.category)
         this.products = shopStore.products
-        Object.values(this.products).forEach((product: Products, index: number) => {
-          if (product.colors.length > 0) {
-            this.colors = product.colors
+        Object.values(this.products).forEach((product: Product, index: number) => {
+          if (product.colors) {
             this.selectedColorIndex[index] = 0
           }
         });
@@ -88,9 +88,8 @@ export default defineComponent({
     changeColor(productIndex: number, colorIndex: number) {
       this.selectedColorIndex.splice(productIndex, 1, colorIndex) 
     },
-    openModal(product: Product, color: Object) {
-      console.log(product, color)
-      this.selectedProduct = product
+    openModal(productName: string, color: Color) {
+      this.selectedProduct = productName
       this.selectedProductColor = color
       this.showModal = true
     },

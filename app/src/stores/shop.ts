@@ -1,86 +1,98 @@
-import axios from 'axios'
-import { defineStore } from 'pinia'
+import axios, { type AxiosResponse } from 'axios';
+import { defineStore } from 'pinia';
 
-export interface Types {
-  name: string
-  url: string
+interface Type {
+  name: string;
+  url: string;
 }
-export interface Categories {
-  name: string
-  url: string
+interface Category {
+  name: string;
+  url: string;
 }
-export interface Products {
-  name: string
-  url: string
-  brandId: number
-  price: string
-  isNew: boolean
-  colors: Array<Object>
+export interface Color {
+  id: number;
+  name: string;
+  path: string;
+  colorHex: string;
+  colorPathName: string;
+  availableSize: number[];
+}
+export interface Size {
+  value: string;
+  available: boolean;
 }
 export interface Product {
-  name: string
-  description: string
+  url: string;
+  name: string;
+  brandLogoPath: string;
+  sizes: string[];
+  price: string;
+  isNew: boolean;
+  colors: Color[];
+  productDetails: Size[];
+}
+export interface Types {
+  [key: number]: Type;
+}
+export interface Categories {
+  [key: number]: Category;
+}
+export interface Products {
+  [key: string]: Product;
 }
 
 export const useShopStore = defineStore({
   id: 'shop',
   state: () => ({
-    product: {} as Record<string, Product>,
-    products: {} as Record<string, Products>,
-    categories: {} as Record<string, Categories>,
-    types: {} as Record<string, Types>,
-    colors: {} as Record<string, Array<Object>>,
+    product: {} as Product,
+    products: {} as Products,
+    categories: {} as Category,
+    types: {} as Type, 
   }),
   actions: {
-    async fetchTypes() {
+    async fetchTypes(this: any) {
       if (Object.keys(this.types).length === 0) {
         try {
-          const response = await axios.get(`http://localhost:3000/shop/`)
-          const data: Record<string, Categories> = await response.data.types
-          this.types = data
+          const response: AxiosResponse<{ types: Type }> = await axios.get(`http://localhost:3000/shop/`);
+          this.types = response.data.types;
         } catch (error) {
-          console.error('Fehler beim Laden der Typen:', error)
-          throw error
+          console.error('Fehler beim Laden der Typen:', error);
+          throw error;
         }
       }
     },
-    async fetchCategories(type: string) {
+    async fetchCategories(this: any, type: string) {
       if (Object.keys(this.categories).length === 0) {
         try {
-          const response = await axios.get(`http://localhost:3000/shop/${type}`)
-          const data: Record<string, Categories> = await response.data.categories
-          this.categories = data
+          const response: AxiosResponse<{ categories: Category }> = await axios.get(`http://localhost:3000/shop/${type}`);
+          this.categories = response.data.categories;
         } catch (error) {
-          console.error('Fehler beim Laden der Kategorien:', error)
-          throw error
+          console.error('Fehler beim Laden der Kategorien:', error);
+          throw error;
         }
       }
     },
-    async fetchProducts(type: string, category: string) {
+    async fetchProducts(this: any, type: string, category: string) {
       if (!this.products[`${type}_${category}`]) {
         try {
-          const response = await axios.get(`http://localhost:3000/shop/${type}/${category}`)
-          const data: Record<string, Products> = await response.data.products
-          this.products = data
+          const response: AxiosResponse<{ products: Products }> = await axios.get(`http://localhost:3000/shop/${type}/${category}`);
+          this.products = response.data.products;
         } catch (error) {
-          console.error('Fehler beim Laden der Produkte:', error)
-          throw error
+          console.error('Fehler beim Laden der Produkte:', error);
+          throw error;
         }
       }
     },
-    async fetchProduct(type: string, category: string, product: string) {
-      if (!this.products[`${type}_${category}_${product}`]) {
+    async fetchProduct(this: any, type: string, category: string, name: string) {
+      if (!this.product || !this.product[`${type}_${category}_${name}`]) {
         try {
-          const response = await axios.get(
-            `http://localhost:3000/shop/${type}/${category}/${product}`
-          )
-          const data: Product = await response.data
-          this.product[`${type}_${category}_${product}`] = data
+          const response: AxiosResponse<Products> = await axios.get(`http://localhost:3000/shop/${type}/${category}/${name}`);
+          this.product = response.data.product;
         } catch (error) {
-          console.error('Fehler beim Laden des Produkts:', error)
-          throw error
+          console.error('Fehler beim Laden des Produkts:', error);
+          throw error;
         }
       }
-    }
-  }
-})
+    },
+  },
+});

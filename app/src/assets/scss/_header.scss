@@ -1,0 +1,28 @@
+header {
+    margin-bottom: calc(var(--grid-gap) / 2);
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        #main_nav {
+            display: flex;
+            align-items: center;
+            & * {
+                display: block;
+            }
+            a {
+                padding: 0 1.5rem;
+                .link {
+                    padding: 1rem 0;
+                    border-bottom: 0.325rem solid transparent;
+                    @extend %transition;
+                }
+                &:hover {
+                    .link {
+                        border-color: var(--challenge-primary);
+                    }
+                }
+            }
+        }
+    }
+}

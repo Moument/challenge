@@ -5,6 +5,23 @@
   height: 100%;
   .product-list-item {
     cursor: pointer;
+    .color-image-wrapper {
+      position: relative;
+      .badges {
+        position: absolute;
+        bottom: 1rem;
+        left: 0;
+        & > * {
+          margin-bottom: 1rem;
+          background: var(--challenge-white);
+          padding: 0.325rem 1rem;
+          font: {
+            size: 0.625rem;
+          }
+          text-transform: uppercase;
+        }
+      }
+    }
   }
   .colors {
     display: flex;
@@ -43,6 +60,10 @@
 
 body.modal-open {
   overflow: hidden;
+}
+
+.price {
+  font-weight: 700;
 }
 
 .product-modal-wrapper {
@@ -93,7 +114,7 @@ body.modal-open {
         display: none;
       }
       .product-modal-front {
-        padding: var(--grid-gap) calc(var(--grid-gap) / 2);
+        padding: var(--grid-gap);
         position: relative;
         .image-slider {
           grid-column: span 7 / span 7;
@@ -104,9 +125,18 @@ body.modal-open {
           top: 0;
           grid-column: span 5 / span 5;
           align-self: start;
+          padding-top: 2rem;
+          .age-flag {
+            display: block;
+            font: {
+              weight: 700;
+              size: 0.9375rem;
+            }
+            margin-bottom: 1rem;
+          }
           .product-modal-info-wrapper {
             padding: calc(var(--grid-gap) / 2) 0;
-            border-bottom: 0.0625rem solid var(--challenge-grey);
+            border-bottom: 0.125rem solid var(--challenge-grey);
             &:last-child {
               border: none;
             }
@@ -176,7 +206,7 @@ body.modal-open {
       }
       .product-modal-desc {
         background: var(--challenge-grey);
-        padding: var(--grid-gap) calc(var(--grid-gap) / 2);
+        padding: var(--grid-gap);
       }
     }
   }
