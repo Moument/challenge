@@ -1,18 +1,7 @@
 .container {
-  max-width: calc(var(--grid-width) + (var(--grid-gap) / 2));
+  max-width: var(--grid-width);
+  padding: 0 var(--grid-gap);
   margin: 0 auto;
 }
 
-.grid {
-  margin-top: var(--grid-gap);
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--grid-gap);
-}
-
-.grid-half {
-  grid-column: span 6;
-}
-.grid-full {
-  grid-column: span 12;
-}
+@include create-grid(12);

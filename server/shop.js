@@ -8,7 +8,7 @@ const shop = {
       url: "shirts",
       name: "Shirts",
       slim_fit_short_sleeve_shirt_with_a_kent_collar: {
-        id: 2,
+        id: 0,
         url: "slim_fit_short_sleeve_shirt_with_a_kent_collar",
         name: "Slim fit: short sleeve shirt with a Kent collar",
         sizes: ["S", "M", "L", "XL", "XXL", "3XL"],

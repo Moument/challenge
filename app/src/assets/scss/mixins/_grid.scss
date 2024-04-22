@@ -1,0 +1,32 @@
+@mixin create-grid($num-cols) {
+  $grid-gap: var(--grid-gap);
+
+  .grid {
+    margin-top: $grid-gap;
+    display: grid;
+    grid-template-columns: repeat($num-cols, minmax(0, 1fr));
+    gap: $grid-gap;
+  }
+
+  @for $i from 1 through $num-cols {
+    .grid-#{$i} {
+      grid-column: span $i / span $i;
+    }
+  }
+
+  @media (min-width: 764px) {
+    @for $i from 1 through $num-cols {
+      .grid-tablet-#{$i} {
+        grid-column: span $i / span $i;
+      }
+    }
+  }
+
+  @media (min-width: 1399px) {
+    @for $i from 1 through $num-cols {
+      .grid-desktop-#{$i} {
+        grid-column: span $i / span $i;
+      }
+    }
+  }
+}

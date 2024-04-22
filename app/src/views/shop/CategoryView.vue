@@ -11,7 +11,7 @@ import { useShopStore, type Categories } from '@/stores/shop'
         <RouterLink
           v-for="(category, index) in categories"
           :key="index"
-          class="shop-item"
+          class="shop-item grid-12 grid-tablet-6 grid-desktop-3"
           :to="{ name: 'category', params: { type: type, category: category.url } }"
           >{{ category.name }}</RouterLink
         >

@@ -11,11 +11,23 @@
   --color-heading: var(--challenge-black);
   --color-text: var(--challenge-black);
 
-  --grid-width: 87.5rem;
+  --grid-width: 100%;
+  --grid-gap: 1rem;
 
   --font: 'Noto Sans', sans-serif;
+}
 
-  --grid-gap: 2.5rem;
+@media screen and (min-width: 764px) {
+  :root {
+    --grid-gap: 1.75rem;
+  }
+}
+
+@media screen and (min-width: 87.5rem) {
+  :root {
+    --grid-width: 87.5rem;
+    --grid-gap: 2.5rem;
+  }
 }
 
 *,
@@ -45,15 +57,18 @@ img {
 }
 
 a {
-  text-decoration: none;
+  text-decoration: underline;
   color: var(--color-text);
   @extend %transition;
   &:hover {
-    color: var(--challenge-primary)
+    color: var(--challenge-primary);
   }
 }
 
-h1, .h1, h2, .h2 {
+h1,
+.h1,
+h2,
+.h2 {
   font: {
     size: 1.875rem;
     weight: 700;
@@ -68,5 +83,14 @@ h3 {
 h4 {
   font: {
     weight: 700;
+  }
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  main {
+    flex: 1;
   }
 }

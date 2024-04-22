@@ -20,10 +20,9 @@ import { useShopStore, type Types } from '@/stores/shop'
           v-for="(type, index) in types"
           :key="index"
           :to="{ name: 'type', params: { type: type.url } }"
-          >
-          <span class="link">{{ type.name }}</span>
-        </RouterLink
         >
+          <span class="link">{{ type.name }}</span>
+        </RouterLink>
       </nav>
     </div>
   </header>

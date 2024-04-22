@@ -11,12 +11,11 @@ import { useShopStore, type Types } from '@/stores/shop'
         <RouterLink
           v-for="(type, index) in types"
           :key="index"
-          class="shop-item"
+          class="shop-item grid-12 grid-tablet-6 grid-desktop-3"
           :to="{ name: 'type', params: { type: type.url } }"
-          >
-          {{ type.name }}
-        </RouterLink
         >
+          {{ type.name }}
+        </RouterLink>
       </div>
     </div>
   </div>

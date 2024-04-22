@@ -1,0 +1,18 @@
+@mixin breakpoint-up($breakpoint) {
+  @media screen and (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+// Mixin für Media-Queries bis zu einer bestimmten Breite
+@mixin breakpoint-down($breakpoint) {
+  @media screen and (max-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin breakpoint-between($min-breakpoint, $max-breakpoint) {
+  @media screen and (min-width: $min-breakpoint) and (max-width: $max-breakpoint) {
+    @content;
+  }
+}

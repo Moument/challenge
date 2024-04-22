@@ -2,6 +2,7 @@
 import { RouterView } from 'vue-router'
 
 import SiteHeader from '@/components/base/SiteHeader.vue'
+import SiteFooter from '@/components/base/SiteFooter.vue'
 </script>
 
 <template>
@@ -9,4 +10,5 @@ import SiteHeader from '@/components/base/SiteHeader.vue'
   <main>
     <RouterView />
   </main>
+  <SiteFooter />
 </template>

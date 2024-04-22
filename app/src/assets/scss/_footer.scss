@@ -1,0 +1,21 @@
+footer {
+  width: 100%;
+  padding: var(--grid-gap);
+  background: var(--challenge-primary);
+  margin-top: var(--grid-gap);
+  .grid {
+    margin: 0;
+  }
+  &,
+  a {
+    color: var(--challenge-white);
+  }
+  nav {
+    display: flex;
+    justify-content: flex-end;
+    a {
+      display: block;
+      padding: 0 calc(var(--grid-gap) / 2);
+    }
+  }
+}

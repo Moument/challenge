@@ -1,24 +1,53 @@
 .tab-wrapper {
   width: 100%;
   .tab-header {
-    display: flex;
-    align-items: center;
-    margin: 0 calc((var(--grid-gap) / 4) * -1);
+    @include breakpoint-down(764px) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      grid-column-gap: var(--grid-gap);
+      grid-row-gap: var(--grid-gap);
+    }
+    @include breakpoint-up(764px) {
+      margin: 0 calc((var(--grid-gap) / 2) * -1);
+      display: flex;
+      align-items: center;
+    }
     .tab-title {
-      padding-top: 0;
-      padding: calc(var(--grid-gap) / 4);
+      @include breakpoint-down(764px) {
+        display: flex;
+        align-items: center;
+        padding: calc(var(--grid-gap) / 2) var(--grid-gap);
+        background: var(--challenge-white);
+        &.active {
+          &:after {
+            left: 0;
+            width: 100%;
+          }
+        }
+      }
+      @include breakpoint-up(764px) {
+        padding: calc(var(--grid-gap) / 2);
+        margin-bottom: 1rem;
+        padding-top: 0;
+        &.active {
+          &:after {
+            left: calc(var(--grid-gap) / 4);
+            width: calc(100% - (var(--grid-gap) / 2));
+          }
+        }
+      }
       position: relative;
       text-transform: uppercase;
       font-weight: 700;
       cursor: pointer;
       &.active {
         &:after {
+          --element-height: 0.3125rem;
           content: '';
           position: absolute;
-          top: 100%;
-          left: calc(var(--grid-gap) / 4);
-          width: calc(100% - (var(--grid-gap) / 2));
-          height: 0.3125rem;
+          top: calc(100% - var(--element-height));
+          height: var(--element-height);
           background: var(--challenge-primary);
         }
       }
@@ -72,6 +101,32 @@
         }
         ul {
           margin: 0 0 0 1rem;
+        }
+      }
+      .overlapping-images {
+        margin-left: auto;
+        position: relative;
+        img {
+          height: auto;
+          &:first-child {
+            width: 40%;
+            @include breakpoint-up(764px) {
+              width: 25%;
+            }
+            @include breakpoint-up(1399px) {
+              width: 20%;
+            }
+            transform: translate(20%, 50%);
+          }
+          &:last-child {
+            width: 60%;
+            @include breakpoint-up(764px) {
+              width: 45%;
+            }
+            @include breakpoint-up(1399px) {
+              width: 20%;
+            }
+          }
         }
       }
       .care {

@@ -28,7 +28,7 @@
   }
   .slider-bullets {
     position: absolute;
-    bottom: calc(var(--grid-gap) / 2);
+    bottom: var(--grid-gap);
     display: flex;
     align-items: center;
     justify-content: center;

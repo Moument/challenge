@@ -1,19 +1,24 @@
 {
-  "name": "Challenge",
+  "name": "soliverchallenge",
   "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "workspaces": [
-    "app",
-    "server"
-  ],
+  "description": "S. Oliver Challenger Webshop",
   "scripts": {
-    "dev": "concurrently \"npm run start:server\" \"npm run start:dev\"",
-    "build": "npm run start:server && npm run start:build",
-    "start:server": "node server/server.js",
-    "start:dev": "cd app && npm run dev",
-    "start:build": "cd app && npm run build"
+    "start": "concurrently \"npm run start:vue\" \"npm run start:node\"",
+    "start:vue": "cd app && npm run dev",
+    "start:node": "cd server && node server.js",
+    "install-dependencies": "npm install && npm run install:subfolders",
+    "install:subfolders": "cd app && npm install && cd ../server && npm install"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Moument/challenge.git"
+  },
+  "author": "Moritz Hofherr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Moument/challenge/issues"
+  },
+  "homepage": "https://github.com/Moument/challenge#readme",
   "devDependencies": {
     "concurrently": "^8.2.2"
   }
